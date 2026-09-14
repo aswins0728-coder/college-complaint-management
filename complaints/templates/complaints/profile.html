@@ -1,0 +1,230 @@
+{% extends 'complaints/base.html' %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+
+<style>
+:root {
+    --bs-primary: rgb(21,107,181);
+}
+
+body {
+    background-color: rgb(21,107,181);
+    width: 100%;
+    height: 100%;
+}
+
+.profile-card {
+    background-color: rgb(15,97,168);
+    border-radius: 1rem;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+    overflow: hidden;
+}
+
+.profile-form .form-label {
+    color: white;
+    font-weight: 500;
+}
+
+.form-control,
+.form-select {
+    border-radius: .5rem;
+}
+
+.btn-primary {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.highlight-bg {
+    background: linear-gradient(
+        to right,
+        rgb(22,114,194),
+        rgba(23,109,183,.9)
+    );
+    padding: 20px;
+}
+
+.profile-photo {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.no-photo {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-section {
+    border-right: 1px solid rgba(255,255,255,.2);
+}
+</style>
+
+<div class="highlight-bg">
+
+    <div class="row justify-content-center p-2 pb-3">
+
+        <div class="col-lg-10">
+
+            <div class="row profile-card p-4">
+
+                <h2 class="mb-4 text-center fw-bold text-white">
+                    Profile Details
+                </h2>
+
+                <!-- PROFILE PHOTO SECTION -->
+                <div class="col-md-4 text-center d-flex flex-column
+                            justify-content-center align-items-center
+                            mb-4 mb-md-0 photo-section">
+
+                    {% if user_profile.profile_picture %}
+                        <img src="{{ user_profile.profile_picture.url }}"
+                             class="profile-photo shadow-sm mb-3"
+                             alt="Profile Photo">
+                    {% else %}
+                        <div class="no-photo shadow-sm mb-3">
+                            <span class="text-muted">No Photo</span>
+                        </div>
+                    {% endif %}
+
+                    <!-- PHOTO FORM ONLY -->
+                    <form method="POST"
+                          enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+                        <label class="form-label d-block">
+                            Profile Photo
+                        </label>
+
+                        <input type="file"
+                               name="profile_picture"
+                               class="form-control"
+                               accept="image/*"
+                               required>
+
+                        <button type="submit"
+                                class="btn btn-outline-light btn-sm mt-2">
+                            Change Photo
+                        </button>
+
+                    </form>
+
+                </div>
+
+                <!-- PROFILE DETAILS SECTION -->
+                <div class="col-md-8 profile-form">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <div class="row">
+
+                            <!-- FULL NAME -->
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Full Name
+                                </label>
+
+                                {{ form.full_name }}
+
+                            </div>
+
+                            <!-- DATE OF BIRTH -->
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Date of Birth
+                                </label>
+
+                                {{ form.birthday }}
+
+                            </div>
+
+                            <!-- GENDER -->
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Gender
+                                </label>
+
+                                {{ form.gender }}
+
+                            </div>
+
+                            <!-- COURSE -->
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Degree
+                                </label>
+
+                                {{ form.course }}
+
+                            </div>
+
+                            <!-- DEPARTMENT -->
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Department
+                                </label>
+
+                                <input type="text"
+                                       class="form-control"
+                                       value="{{ user_profile.get_department_display }}"
+                                       readonly>
+
+                            </div>
+
+                            <!-- PHONE -->
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    Phone
+                                </label>
+
+                                {{ form.phone }}
+
+                            </div>
+
+                        </div>
+
+                        <!-- SAVE DETAILS -->
+                        <div class="text-end">
+
+                            <button type="submit"
+                                    class="btn btn-primary">
+                                Save Changes
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                    {% if form.errors %}
+                        <div class="alert alert-warning mt-3">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

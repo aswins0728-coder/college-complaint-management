@@ -1,0 +1,153 @@
+{% extends 'complaints/base.html' %}
+{% load static %}
+
+{% block title %}Submit Complaint{% endblock %}
+
+{% block content %}
+
+<div class="bg-container"
+     style="
+        min-height:calc(100vh - 72px);
+        background-image:url('{% static 'images/complaint_bg.jpg' %}');
+        background-size:cover;
+        background-position:center;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:2rem;
+     ">
+
+    <div class="card shadow-lg border-0 p-4 w-100"
+         style="
+            max-width:100%;
+            background-color:rgba(255,255,255,.62);
+            backdrop-filter:blur(5px);
+            border-radius:1rem;
+         ">
+
+        <div class="card-body">
+
+            <h3 class="text-center mb-4 text-dark">
+                Submit a Complaint
+            </h3>
+
+            <form method="POST"
+                  enctype="multipart/form-data"
+                  novalidate>
+
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+
+                <!-- DEPARTMENT -->
+
+                <div class="mb-3">
+
+                    <label class="form-label text-dark fw-bold">
+                        Complaint Department
+                    </label>
+
+                    {{ form.department }}
+
+                    {% for e in form.department.errors %}
+                        <div class="text-danger small">
+                            {{ e }}
+                        </div>
+                    {% endfor %}
+
+                    <div class="form-text">
+                        Select the department responsible for this complaint.
+                    </div>
+
+                </div>
+
+
+                <!-- TITLE -->
+
+                <div class="mb-3">
+
+                    <label class="form-label text-dark fw-bold">
+                        Complaint Title
+                    </label>
+
+                    {{ form.title }}
+
+                    {% for e in form.title.errors %}
+                        <div class="text-danger small">
+                            {{ e }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="mb-3">
+
+                    <label class="form-label text-dark fw-bold">
+                        Description
+                    </label>
+
+                    {{ form.description }}
+
+                    {% for e in form.description.errors %}
+                        <div class="text-danger small">
+                            {{ e }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- PROOF -->
+
+                <div class="mb-4">
+
+                    <label class="form-label text-dark fw-bold">
+                        Upload Proof (Optional)
+                    </label>
+
+                    {{ form.proof }}
+
+                    {% for e in form.proof.errors %}
+                        <div class="text-danger small">
+                            {{ e }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- SUBMIT -->
+
+                <div class="text-center">
+
+                    <button type="submit"
+                            class="btn btn-lg px-5 py-2 rounded-pill text-white"
+                            style="
+                                background-color:#104E8B;
+                                font-weight:600;
+                            ">
+
+                        <i class="bi bi-send me-1"></i>
+                        Submit
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'complaints/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h3>Reply to Complaint</h3>
+    <p><strong>Title:</strong> {{ complaint.title }}</p>
+    <p><strong>Description:</strong> {{ complaint.description }}</p>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="reply" class="form-label">Reply:</label>
+            <textarea name="reply" id="reply" class="form-control" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Submit Reply</button>
+    </form>
+</div>
+{% endblock %}

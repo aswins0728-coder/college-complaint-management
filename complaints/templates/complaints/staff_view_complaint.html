@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>View Complaint - Staff</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    rgba(0, 80, 160, 0.75),
+                    rgba(0, 130, 200, 0.75)
+                ),
+                url("https://images.unsplash.com/photo-1562774053-701939374585")
+                center / cover fixed;
+
+            min-height: 100vh;
+
+        }
+
+
+        /* ================================================
+           TOP BAR
+        ================================================= */
+
+        .topbar {
+
+            height: 70px;
+
+            background: #172554;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 30px;
+
+        }
+
+
+        .logo {
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+        }
+
+
+        .logout {
+
+            color: white;
+
+            background: #dc2626;
+
+            text-decoration: none;
+
+            padding: 10px 18px;
+
+            border-radius: 7px;
+
+            font-weight: bold;
+
+        }
+
+
+        .logout:hover {
+
+            background: #b91c1c;
+
+        }
+
+
+        /* ================================================
+           MAIN
+        ================================================= */
+
+        .container {
+
+            width: 100%;
+
+            max-width: 900px;
+
+            margin: 40px auto;
+
+            padding: 20px;
+
+        }
+
+
+        .card {
+
+            background: rgba(255, 255, 255, 0.96);
+
+            border-radius: 15px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.25);
+
+        }
+
+
+        h1 {
+
+            margin-top: 0;
+
+            color: #1976d2;
+
+        }
+
+
+        /* ================================================
+           MESSAGE
+        ================================================= */
+
+        .messages {
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .message {
+
+            padding: 13px;
+
+            border-radius: 8px;
+
+            margin-bottom: 10px;
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            font-weight: bold;
+
+        }
+
+
+        .message.success {
+
+            background: #dcfce7;
+
+            color: #166534;
+
+        }
+
+
+        /* ================================================
+           COMPLAINT DETAILS
+        ================================================= */
+
+        .detail {
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .label {
+
+            display: block;
+
+            color: #555;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            margin-bottom: 6px;
+
+        }
+
+
+        .value {
+
+            background: #f3f4f6;
+
+            border-radius: 8px;
+
+            padding: 13px;
+
+            color: #222;
+
+            line-height: 1.6;
+
+        }
+
+
+        /* ================================================
+           STATUS
+        ================================================= */
+
+        .status {
+
+            display: inline-block;
+
+            padding: 8px 15px;
+
+            border-radius: 20px;
+
+            font-weight: bold;
+
+        }
+
+
+        .pending {
+
+            background: #fef3c7;
+
+            color: #92400e;
+
+        }
+
+
+        .resolved {
+
+            background: #dcfce7;
+
+            color: #166534;
+
+        }
+
+
+        /* ================================================
+           REPLY
+        ================================================= */
+
+        .reply-section {
+
+            margin-top: 30px;
+
+            padding-top: 25px;
+
+            border-top: 1px solid #ddd;
+
+        }
+
+
+        textarea {
+
+            width: 100%;
+
+            min-height: 180px;
+
+            resize: vertical;
+
+            padding: 15px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 9px;
+
+            font-family: Arial, sans-serif;
+
+            font-size: 15px;
+
+            outline: none;
+
+        }
+
+
+        textarea:focus {
+
+            border-color: #1976d2;
+
+            box-shadow:
+                0 0 0 2px rgba(25, 118, 210, 0.15);
+
+        }
+
+
+        .hint {
+
+            color: #777;
+
+            font-size: 13px;
+
+            margin-top: 7px;
+
+        }
+
+
+        .submit-button {
+
+            margin-top: 18px;
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #1976d2;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+
+        .submit-button:hover {
+
+            background: #125ca8;
+
+        }
+
+
+        .back-button {
+
+            display: inline-block;
+
+            margin-top: 20px;
+
+            padding: 11px 18px;
+
+            border-radius: 8px;
+
+            background: #64748b;
+
+            color: white;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+        }
+
+
+        .back-button:hover {
+
+            background: #475569;
+
+        }
+
+
+        /* ================================================
+           FOOTER
+        ================================================= */
+
+        footer {
+
+            text-align: center;
+
+            color: white;
+
+            padding: 20px;
+
+            font-size: 13px;
+
+        }
+
+
+        /* ================================================
+           MOBILE
+        ================================================= */
+
+        @media (max-width: 600px) {
+
+            .topbar {
+
+                padding: 0 15px;
+
+            }
+
+
+            .logo {
+
+                font-size: 18px;
+
+            }
+
+
+            .container {
+
+                margin: 20px auto;
+
+                padding: 10px;
+
+            }
+
+
+            .card {
+
+                padding: 20px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     TOP BAR
+====================================================== -->
+
+<div class="topbar">
+
+    <div class="logo">
+        Complaint Portal
+    </div>
+
+
+    <a
+        href="{% url 'logout' %}"
+        class="logout"
+    >
+        Logout
+    </a>
+
+</div>
+
+
+
+<!-- =====================================================
+     MAIN
+====================================================== -->
+
+<div class="container">
+
+
+    <div class="card">
+
+
+        <h1>
+            Complaint Details
+        </h1>
+
+
+        <!-- =================================================
+             DJANGO MESSAGES
+        ================================================== -->
+
+        {% if messages %}
+
+            <div class="messages">
+
+                {% for message in messages %}
+
+                    <div
+                        class="message
+                        {% if message.tags == 'success' %}
+                            success
+                        {% endif %}
+                        "
+                    >
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+
+        <!-- =================================================
+             STUDENT
+        ================================================== -->
+
+        <div class="detail">
+
+            <span class="label">
+                Student
+            </span>
+
+            <div class="value">
+
+                {{ complaint.student.username }}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             TITLE
+        ================================================== -->
+
+        <div class="detail">
+
+            <span class="label">
+                Complaint Title
+            </span>
+
+            <div class="value">
+
+                {{ complaint.title }}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             DEPARTMENT
+        ================================================== -->
+
+        <div class="detail">
+
+            <span class="label">
+                Department
+            </span>
+
+            <div class="value">
+
+                {{ complaint.department }}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             STATUS
+        ================================================== -->
+
+        <div class="detail">
+
+            <span class="label">
+                Status
+            </span>
+
+            <div class="value">
+
+                {% if complaint.status == "Resolved" %}
+
+                    <span class="status resolved">
+                        ✓ Resolved
+                    </span>
+
+                {% else %}
+
+                    <span class="status pending">
+                        ⏱ Pending
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             DATE
+        ================================================== -->
+
+        <div class="detail">
+
+            <span class="label">
+                Submitted
+            </span>
+
+            <div class="value">
+
+                {{ complaint.created_at|date:"d M Y, h:i A" }}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             DESCRIPTION
+        ================================================== -->
+
+        <div class="detail">
+
+            <span class="label">
+                Complaint Description
+            </span>
+
+            <div class="value">
+
+                {{ complaint.description|linebreaksbr }}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             EXISTING REPLY
+        ================================================== -->
+
+        {% if complaint.reply %}
+
+            <div class="detail">
+
+                <span class="label">
+                    Previous Reply
+                </span>
+
+                <div class="value">
+
+                    {{ complaint.reply|linebreaksbr }}
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+
+        <!-- =================================================
+             REPLY FORM
+        ================================================== -->
+
+        <div class="reply-section">
+
+
+            <h2>
+                {% if complaint.status == "Resolved" %}
+                    Update Reply
+                {% else %}
+                    Submit Reply
+                {% endif %}
+            </h2>
+
+
+            <form
+                method="POST"
+                action="{% url 'staff_view_complaint' complaint.id %}"
+            >
+
+                <!-- VERY IMPORTANT -->
+                {% csrf_token %}
+
+
+                <label
+                    for="reply"
+                    class="label"
+                >
+                    Staff Reply
+                </label>
+
+
+                <textarea
+                    id="reply"
+                    name="reply"
+                    placeholder="Enter your reply to the student..."
+                    minlength="20"
+                    required
+                >{% if complaint.reply %}{{ complaint.reply }}{% endif %}</textarea>
+
+
+                <div class="hint">
+                    Minimum 20 characters.
+                    Submitting the reply will mark the complaint as Resolved.
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="submit-button"
+                >
+                    {% if complaint.status == "Resolved" %}
+                        Update Reply
+                    {% else %}
+                        Submit Reply & Mark as Resolved
+                    {% endif %}
+                </button>
+
+
+            </form>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             BACK
+        ================================================== -->
+
+        <a
+            href="{% url 'staff_dashboard' %}"
+            class="back-button"
+        >
+            ← Back to Staff Dashboard
+        </a>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
+<footer>
+
+    © 2026 College Complaint System. All rights reserved.
+
+</footer>
+
+
+</body>
+
+</html>

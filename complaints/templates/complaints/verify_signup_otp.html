@@ -1,0 +1,116 @@
+{% extends 'complaints/base.html' %}
+
+{% block title %}Verify Email{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-4 p-md-5">
+
+                    <h2 class="text-center text-primary fw-bold mb-2">
+                        Verify Email
+                    </h2>
+
+                    <p class="text-center text-muted mb-4">
+                        Enter the 6-digit OTP sent to your email.
+                    </p>
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert
+                                {% if message.tags == 'error' %}
+                                    alert-danger
+                                {% else %}
+                                    alert-{{ message.tags }}
+                                {% endif %}
+                                alert-dismissible fade show"
+                                role="alert">
+
+                                {{ message }}
+
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="alert">
+                                </button>
+
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if email %}
+                        <div class="text-center mb-3">
+                            <small class="text-muted">
+                                OTP sent to:
+                            </small>
+                            <br>
+                            <strong>{{ email }}</strong>
+                        </div>
+                    {% endif %}
+
+                    {% if not otp_expired %}
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label for="otp"
+                                   class="form-label fw-semibold">
+                                Enter OTP
+                            </label>
+
+                            <input type="text"
+                                   name="otp"
+                                   id="otp"
+                                   class="form-control text-center"
+                                   placeholder="Enter 6-digit OTP"
+                                   maxlength="6"
+                                   inputmode="numeric"
+                                   autocomplete="one-time-code"
+                                   required>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary w-100 py-2">
+                            <i class="bi bi-check-circle me-1"></i>
+                            Verify OTP
+                        </button>
+
+                    </form>
+
+                    {% endif %}
+
+                    <div class="text-center mt-4">
+
+                        <p class="text-muted mb-2">
+                            Didn't receive the OTP?
+                        </p>
+
+                        <a href="{% url 'resend_signup_otp' %}"
+                           class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-clockwise me-1"></i>
+                            Resend OTP
+                        </a>
+
+                    </div>
+
+                    <div class="text-center mt-3">
+
+                        <a href="{% url 'signup' %}"
+                           class="text-decoration-none">
+                            ← Back to Sign Up
+                        </a>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

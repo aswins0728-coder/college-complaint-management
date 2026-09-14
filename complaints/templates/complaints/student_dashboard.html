@@ -1,0 +1,431 @@
+{% extends 'complaints/base.html' %}
+{% load static %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+
+<style>
+
+/* =========================
+   DASHBOARD CONTAINER
+   ========================= */
+
+.dashboard-container {
+    min-height: calc(100vh - 72px);
+    display: flex;
+    background-color: rgb(15, 87, 159);
+}
+
+
+/* =========================
+   SIDEBAR
+   ========================= */
+
+.sidebar {
+    width: 250px;
+    background-color: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+    padding: 1.5rem 1rem;
+}
+
+.sidebar h5 {
+    color: #0d6efd;
+}
+
+
+/* =========================
+   MAIN CONTENT
+   ========================= */
+
+.main-content {
+    flex-grow: 1;
+    padding: 2rem;
+
+    background-image:
+        linear-gradient(
+            rgba(255, 255, 255, 0.35),
+            rgba(255, 255, 255, 0.35)
+        ),
+        url("{% static 'images/college_bg.jpg' %}");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    border-radius: 12px;
+}
+
+
+/* =========================
+   COMPLAINT CARD
+   ========================= */
+
+.card {
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(2px);
+}
+
+
+/* =========================
+   PROFILE
+   ========================= */
+
+.profile-section {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.profile-picture {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #0d6efd;
+    margin-bottom: .5rem;
+}
+
+.username {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+}
+
+
+/* =========================
+   ACTION BUTTONS
+   ========================= */
+
+.action-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+
+/* =========================
+   TABLE
+   ========================= */
+
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    white-space: nowrap;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+
+/* =========================
+   MOBILE RESPONSIVE
+   ========================= */
+
+@media (max-width: 768px) {
+
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .main-content {
+        padding: 1rem;
+        border-radius: 0;
+    }
+
+}
+
+</style>
+
+
+<div class="dashboard-container">
+
+    <!-- ========================= -->
+    <!-- SIDEBAR -->
+    <!-- ========================= -->
+
+    <div class="sidebar shadow-sm">
+
+        <!-- PROFILE -->
+
+        <div class="profile-section">
+
+            {% if user_profile.profile_picture %}
+
+                <img
+                    src="{{ user_profile.profile_picture.url }}"
+                    class="img-fluid rounded-circle shadow-sm profile-picture"
+                    alt="Profile Picture"
+                >
+
+            {% endif %}
+
+            <a
+                href="{% url 'student_profile' %}"
+                class="username text-decoration-none d-block"
+            >
+                {{ user.username }}
+            </a>
+
+        </div>
+
+
+        <!-- DASHBOARD MENU -->
+
+        <h5>Dashboard Menu</h5>
+
+        <hr>
+
+
+        <ul class="nav flex-column">
+
+
+            <!-- YOUR COMPLAINTS -->
+
+            <li class="nav-item mb-2">
+
+                <a
+                    class="nav-link active text-dark"
+                    href="{% url 'student_dashboard' %}"
+                >
+
+                    <i class="bi bi-list-ul me-1"></i>
+
+                    Your Complaints
+
+                </a>
+
+            </li>
+
+
+            <!-- NEW COMPLAINT -->
+
+            <li class="nav-item mb-2">
+
+                <a
+                    class="nav-link text-dark"
+                    href="{% url 'submit_complaint' %}"
+                >
+
+                    <i class="bi bi-plus-circle me-1"></i>
+
+                    New Complaint
+
+                </a>
+
+            </li>
+
+
+        </ul>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ========================= -->
+
+    <div class="main-content">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+
+                <!-- PAGE TITLE -->
+
+                <h3 class="card-title text-primary mb-4">
+
+                    Your Complaints
+
+                </h3>
+
+
+                <!-- ========================= -->
+                <!-- COMPLAINTS EXIST -->
+                <!-- ========================= -->
+
+                {% if complaints %}
+
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered align-middle">
+
+
+                            <!-- TABLE HEADER -->
+
+                            <thead class="table-dark">
+
+                                <tr>
+
+                                    <th>Title</th>
+
+                                    <th>Status</th>
+
+                                    <th>Reply</th>
+
+                                    <th>Date & Time</th>
+
+                                    <th>Action</th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <!-- TABLE BODY -->
+
+                            <tbody class="table-light">
+
+
+                                {% for c in complaints %}
+
+                                    <tr>
+
+
+                                        <!-- TITLE -->
+
+                                        <td>
+
+                                            {{ c.title }}
+
+                                        </td>
+
+
+                                        <!-- STATUS -->
+
+                                        <td>
+
+                                            <span
+                                                class="badge
+                                                {% if c.status == 'Resolved' %}
+                                                    bg-success
+                                                {% else %}
+                                                    bg-secondary
+                                                {% endif %}"
+                                            >
+
+                                                {{ c.status }}
+
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- REPLY -->
+
+                                        <td>
+
+                                            {{ c.reply|default:"—" }}
+
+                                        </td>
+
+
+                                        <!-- DATE & TIME -->
+
+                                        <td>
+
+                                            {{ c.created_at|date:"M d, Y, g:i a" }}
+
+                                        </td>
+
+
+                                        <!-- ACTIONS -->
+
+                                        <td>
+
+                                            <div class="action-buttons">
+
+
+                                                <!-- VIEW -->
+
+                                                <a
+                                                    href="{% url 'student_view_complaint' c.id %}"
+                                                    class="btn btn-sm btn-outline-info"
+                                                >
+
+                                                    <i class="bi bi-eye"></i>
+
+                                                    View
+
+                                                </a>
+
+
+                                                <!-- DELETE -->
+
+                                                <form
+                                                    method="POST"
+                                                    action="{% url 'delete_complaint' c.id %}"
+                                                    style="display: inline;"
+                                                    onsubmit="return confirm('Are you sure you want to delete this complaint?');"
+                                                >
+
+                                                    {% csrf_token %}
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-sm btn-danger"
+                                                    >
+
+                                                        <i class="bi bi-trash"></i>
+
+                                                        Delete
+
+                                                    </button>
+
+                                                </form>
+
+
+                                            </div>
+
+                                        </td>
+
+
+                                    </tr>
+
+                                {% endfor %}
+
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                <!-- ========================= -->
+                <!-- NO COMPLAINTS -->
+                <!-- ========================= -->
+
+                {% else %}
+
+                    <div class="alert alert-info">
+
+                        <i class="bi bi-info-circle"></i>
+
+                        You haven't submitted any complaints yet.
+
+                    </div>
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
