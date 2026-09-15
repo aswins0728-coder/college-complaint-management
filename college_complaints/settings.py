@@ -22,7 +22,6 @@ DEBUG = os.environ.get(
 ).lower() == "true"
 
 
-# Render automatically provides RENDER_EXTERNAL_HOSTNAME
 RENDER_EXTERNAL_HOSTNAME = os.environ.get(
     "RENDER_EXTERNAL_HOSTNAME"
 )
@@ -79,6 +78,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    # Cloudinary
+    "cloudinary_storage",
+    "cloudinary",
+
     # REST API
     "rest_framework",
     "rest_framework.authtoken",
@@ -95,7 +98,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
 
-    # WhiteNoise for production static files
     "whitenoise.middleware.WhiteNoiseMiddleware",
 
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -156,13 +158,6 @@ WSGI_APPLICATION = "college_complaints.wsgi.application"
 # =========================================================
 # DATABASE
 # =========================================================
-#
-# Local computer:
-#     Uses SQLite if DATABASE_URL is not present.
-#
-# Render:
-#     Uses PostgreSQL from DATABASE_URL.
-#
 
 DATABASES = {
     "default": dj_database_url.config(
@@ -190,7 +185,6 @@ AUTH_PASSWORD_VALIDATORS = [
             "django.contrib.auth.password_validation."
             "MinimumLengthValidator"
         ),
-
         "OPTIONS": {
             "min_length": 8
         },
@@ -235,10 +229,6 @@ STATIC_URL = "/static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATICFILES_STORAGE = (
-    "whitenoise.storage.CompressedManifestStaticFilesStorage"
-)
-
 
 # =========================================================
 # MEDIA FILES
@@ -247,6 +237,28 @@ STATICFILES_STORAGE = (
 MEDIA_URL = "/media/"
 
 MEDIA_ROOT = BASE_DIR / "complaints" / "media"
+
+
+# =========================================================
+# CLOUDINARY
+# =========================================================
+
+CLOUDINARY_URL = os.environ.get("CLOUDINARY_URL")
+
+
+# =========================================================
+# FILE STORAGE
+# =========================================================
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 
 # =========================================================
@@ -277,15 +289,18 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = os.environ.get(
     "EMAIL_HOST_USER",
-    "jucomplainmanagement@gmail.com"
+    ""
 )
 
 EMAIL_HOST_PASSWORD = os.environ.get(
     "EMAIL_HOST_PASSWORD",
-    "fmcqptqlnkcpznzr"
+    ""
 )
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "DEFAULT_FROM_EMAIL",
+    EMAIL_HOST_USER
+)
 
 
 # =========================================================
