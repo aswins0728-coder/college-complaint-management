@@ -34,25 +34,67 @@
     margin-bottom: 1.5rem;
 }
 
+
+/* =========================
+   PROFILE PICTURE
+   ========================= */
+
 .profile-picture {
-    width: 85px;
-    height: 85px;
-    object-fit: cover;
-    border-radius: 50%;
+    width: 85px !important;
+    height: 85px !important;
+    min-width: 85px !important;
+    min-height: 85px !important;
+    max-width: 85px !important;
+    max-height: 85px !important;
+
+    aspect-ratio: 1 / 1 !important;
+
+    object-fit: cover !important;
+    object-position: center !important;
+
+    border-radius: 50% !important;
+
     border: 2px solid #0d6efd;
+
     margin-bottom: 10px;
+
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+
+    overflow: hidden;
 }
+
+
+/* =========================
+   NO PROFILE
+   ========================= */
 
 .no-profile {
     width: 85px;
     height: 85px;
+    min-width: 85px;
+    min-height: 85px;
+
+    aspect-ratio: 1 / 1;
+
     border-radius: 50%;
+
     background-color: #dee2e6;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     margin-bottom: 10px;
+
+    overflow: hidden;
 }
+
+
+/* =========================
+   USERNAME
+   ========================= */
 
 .username {
     font-weight: bold;
@@ -160,6 +202,17 @@
     .main-content {
         padding: 1rem;
         border-radius: 0;
+    }
+
+    .profile-picture {
+        width: 85px !important;
+        height: 85px !important;
+        min-width: 85px !important;
+        min-height: 85px !important;
+        max-width: 85px !important;
+        max-height: 85px !important;
+        aspect-ratio: 1 / 1 !important;
+        border-radius: 50% !important;
     }
 
 }

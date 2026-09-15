@@ -1,6 +1,7 @@
 import re
 import secrets
 import resend
+import requests
 import os
 from datetime import datetime, timedelta
 
@@ -35,7 +36,7 @@ def generate_otp():
 
 def send_otp_email(email, otp, purpose="verification"):
     """
-    Send OTP to the user's email.
+    Send OTP to the user's email using Brevo API.
     """
 
     if purpose == "verification":
@@ -88,17 +89,40 @@ Thank you.
 College Complaint Management System
 """
 
-    resend.api_key = os.environ.get("RESEND_API_KEY")
+    api_key = os.environ.get("BREVO_API_KEY")
+    sender_email = os.environ.get("DEFAULT_FROM_EMAIL")
 
-    resend.Emails.send({
-        "from": os.environ.get(
-            "DEFAULT_FROM_EMAIL",
-            "onboarding@resend.dev"
-        ),
-        "to": [email],
-        "subject": subject,
-        "text": message,
-    })
+    if not api_key:
+        raise RuntimeError("BREVO_API_KEY is not configured")
+
+    if not sender_email:
+        raise RuntimeError("DEFAULT_FROM_EMAIL is not configured")
+
+    response = requests.post(
+        "https://api.brevo.com/v3/smtp/email",
+        headers={
+            "accept": "application/json",
+            "api-key": api_key,
+            "content-type": "application/json",
+        },
+        json={
+            "sender": {
+                "name": "College Complaint Management System",
+                "email": sender_email,
+            },
+            "to": [
+                {
+                    "email": email
+                }
+            ],
+            "subject": subject,
+            "textContent": message,
+        },
+        timeout=15,
+    )
+
+    response.raise_for_status()
+
 
 # =========================================================
 # OTP SESSION HELPERS
