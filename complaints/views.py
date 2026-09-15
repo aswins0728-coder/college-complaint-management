@@ -1,5 +1,6 @@
 import re
 import secrets
+import resend
 from datetime import datetime, timedelta
 
 from django.contrib import messages
@@ -30,7 +31,6 @@ def generate_otp():
     Generate a secure 6-digit OTP.
     """
     return str(secrets.randbelow(900000) + 100000)
-
 
 def send_otp_email(email, otp, purpose="verification"):
     """
@@ -87,14 +87,17 @@ Thank you.
 College Complaint Management System
 """
 
-    send_mail(
-        subject,
-        message,
-        None,
-        [email],
-        fail_silently=False,
-    )
+    resend.api_key = os.environ.get("RESEND_API_KEY")
 
+    resend.Emails.send({
+        "from": os.environ.get(
+            "DEFAULT_FROM_EMAIL",
+            "onboarding@resend.dev"
+        ),
+        "to": [email],
+        "subject": subject,
+        "text": message,
+    })
 
 # =========================================================
 # OTP SESSION HELPERS

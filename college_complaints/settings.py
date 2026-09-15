@@ -1,6 +1,9 @@
 import os
 from pathlib import Path
 
+import dj_database_url
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -13,7 +16,16 @@ SECRET_KEY = os.environ.get(
     "change-this-in-production"
 )
 
-DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
+DEBUG = os.environ.get(
+    "DEBUG",
+    "True"
+).lower() == "true"
+
+
+# Render automatically provides RENDER_EXTERNAL_HOSTNAME
+RENDER_EXTERNAL_HOSTNAME = os.environ.get(
+    "RENDER_EXTERNAL_HOSTNAME"
+)
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -23,6 +35,9 @@ ALLOWED_HOSTS = [
     ).split(",")
     if host.strip()
 ]
+
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # =========================================================
@@ -37,6 +52,16 @@ CSRF_TRUSTED_ORIGINS = [
     ).split(",")
     if origin.strip()
 ]
+
+if RENDER_EXTERNAL_HOSTNAME:
+    CSRF_TRUSTED_ORIGINS.append(
+        f"https://{RENDER_EXTERNAL_HOSTNAME}"
+    )
+
+
+# =========================================================
+# SECURE COOKIES
+# =========================================================
 
 CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
@@ -69,6 +94,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+
+    # WhiteNoise for production static files
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 
     "django.contrib.sessions.middleware.SessionMiddleware",
 
@@ -128,53 +156,21 @@ WSGI_APPLICATION = "college_complaints.wsgi.application"
 # =========================================================
 # DATABASE
 # =========================================================
+#
+# Local computer:
+#     Uses SQLite if DATABASE_URL is not present.
+#
+# Render:
+#     Uses PostgreSQL from DATABASE_URL.
+#
 
-if os.environ.get("DB_ENGINE", "sqlite").lower() == "mysql":
-
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.mysql",
-
-            "NAME": os.environ.get(
-                "DB_NAME",
-                "college_complaints"
-            ),
-
-            "USER": os.environ.get(
-                "DB_USER",
-                "root"
-            ),
-
-            "PASSWORD": os.environ.get(
-                "DB_PASSWORD",
-                ""
-            ),
-
-            "HOST": os.environ.get(
-                "DB_HOST",
-                "127.0.0.1"
-            ),
-
-            "PORT": os.environ.get(
-                "DB_PORT",
-                "3306"
-            ),
-
-            "OPTIONS": {
-                "charset": "utf8mb4"
-            },
-        }
-    }
-
-else:
-
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+DATABASES = {
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        ssl_require=not DEBUG,
+    )
+}
 
 
 # =========================================================
@@ -239,6 +235,10 @@ STATIC_URL = "/static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+STATICFILES_STORAGE = (
+    "whitenoise.storage.CompressedManifestStaticFilesStorage"
+)
+
 
 # =========================================================
 # MEDIA FILES
@@ -264,7 +264,7 @@ LOGIN_URL = "login"
 
 
 # =========================================================
-# EMAIL / OTP SETTINGS
+# EMAIL SETTINGS
 # =========================================================
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
