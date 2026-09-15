@@ -1,6 +1,7 @@
 import re
 import secrets
 import resend
+import os
 from datetime import datetime, timedelta
 
 from django.contrib import messages
