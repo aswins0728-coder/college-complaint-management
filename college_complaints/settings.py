@@ -26,6 +26,7 @@ RENDER_EXTERNAL_HOSTNAME = os.environ.get(
     "RENDER_EXTERNAL_HOSTNAME"
 )
 
+
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
@@ -236,14 +237,14 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 
-MEDIA_ROOT = BASE_DIR / "complaints" / "media"
-
 
 # =========================================================
 # CLOUDINARY
 # =========================================================
 
-CLOUDINARY_URL = os.environ.get("CLOUDINARY_URL")
+CLOUDINARY_URL = os.environ.get(
+    "CLOUDINARY_URL"
+)
 
 
 # =========================================================
@@ -252,11 +253,17 @@ CLOUDINARY_URL = os.environ.get("CLOUDINARY_URL")
 
 STORAGES = {
     "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        "BACKEND": (
+            "cloudinary_storage.storage."
+            "MediaCloudinaryStorage"
+        ),
     },
 
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": (
+            "whitenoise.storage."
+            "CompressedManifestStaticFilesStorage"
+        ),
     },
 }
 
@@ -265,7 +272,9 @@ STORAGES = {
 # DEFAULT PRIMARY KEY
 # =========================================================
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+DEFAULT_AUTO_FIELD = (
+    "django.db.models.BigAutoField"
+)
 
 
 # =========================================================
@@ -279,7 +288,9 @@ LOGIN_URL = "login"
 # EMAIL SETTINGS
 # =========================================================
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = (
+    "django.core.mail.backends.smtp.EmailBackend"
+)
 
 EMAIL_HOST = "smtp.gmail.com"
 
@@ -309,11 +320,13 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication."
+        "TokenAuthentication",
     ],
 
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
+        "rest_framework.permissions."
+        "IsAuthenticated",
     ],
 }
 
