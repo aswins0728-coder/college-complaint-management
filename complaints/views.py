@@ -1,6 +1,5 @@
 import re
 import secrets
-import resend
 import requests
 import os
 from datetime import datetime, timedelta
